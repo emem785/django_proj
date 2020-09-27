@@ -33,10 +33,27 @@ class ModifyUser(APIView):
         except User.DoesNotExist:
             raise Http404
     
+                
+    
     def get(self,request,pk,fomat=None):
         user = self.get_object(pk)
         serializer = UserSerializer(user)
         return Response(serializer.data)
             
+    def put(self,request,pk,fomat=None):
+        user = self.get_object(pk)
+        serializer = UserSerializer(user,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self,request,pk,fomat=None):
+        user = self.get_object(pk)
+        serializer = UserSerializer(user)
+        user.delete()
+        return Response(serializer.data)
+
 
 
